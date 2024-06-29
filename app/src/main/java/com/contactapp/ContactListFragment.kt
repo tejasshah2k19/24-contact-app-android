@@ -74,7 +74,7 @@ class ContactListFragment : Fragment() {
 
         recyclerViewContacts = view.findViewById(R.id.recyclerViewContacts)
         recyclerViewContacts.layoutManager = LinearLayoutManager(context)
-        contactAdapter = ContactAdapter(contactList)
+        contactAdapter = ContactAdapter(contactList,view.context)
         recyclerViewContacts.adapter = contactAdapter
 
         loadContacts()
