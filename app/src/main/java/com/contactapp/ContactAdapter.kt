@@ -30,11 +30,7 @@ class ContactAdapter(private val contactList: List<ContactModel>,private val con
         val contact = contactList[position]
         holder.textViewName.text = contact.name
         holder.textViewEmail.text = contact.contact
-//        val iconRes = when (contact.type) {
-//            "EMAIL" -> R.drawable.email2
-//            "PHONE" -> R.drawable.call
-//            else -> R.drawable.contact_info
-//        }
+
 
 
         val (iconRes, lblText) = when (contact.type) {

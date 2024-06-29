@@ -1,6 +1,7 @@
 package com.contactapp
 
 import android.content.ContentValues
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.contactapp.model.ContactModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,15 +90,29 @@ class AddPhoneFragment : Fragment() {
         }
     }
 
-    private fun addContact(name: String, email: String) {
-        val values = ContentValues().apply {
-            put(ContactContract.ContactEntry.COLUMN_NAME_NAME, name)
-            put(ContactContract.ContactEntry.COLUMN_NAME_TYPE, "PHONE")
+    private fun addContact(name: String, phone: String) {
+        val newContact = ContactModel(name, "PHONE", phone)
+        val sharedPreferences =
+            requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
 
-            put(ContactContract.ContactEntry.COLUMN_NAME_CONTACT, email)
+        // Get existing contacts
+        val gson = Gson()
+        val json = sharedPreferences.getString("contactList", null)
+        val type = object : TypeToken<MutableList<ContactModel>>() {}.type
+        val contactList: MutableList<ContactModel> = if (json == null) {
+            mutableListOf()
+        } else {
+            gson.fromJson(json, type)
         }
 
-        context?.contentResolver?.insert(ContactContract.CONTENT_URI, values)
+        // Add new contact
+        contactList.add(newContact)
+
+        // Save updated contact list
+        val updatedJson = gson.toJson(contactList)
+        editor.putString("contactList", updatedJson)
+        editor.apply()
     }
 
 }

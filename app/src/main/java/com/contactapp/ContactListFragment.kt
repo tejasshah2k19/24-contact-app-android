@@ -1,5 +1,6 @@
 package com.contactapp
 
+import android.content.Context
 import android.database.Cursor
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -12,6 +13,8 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.contactapp.model.ContactModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -87,35 +90,17 @@ class ContactListFragment : Fragment() {
     }
 
     private fun loadContacts() {
-        val projection = arrayOf(
-             ContactContract.ContactEntry.COLUMN_NAME_NAME,
-            ContactContract.ContactEntry.COLUMN_NAME_TYPE,
-            ContactContract.ContactEntry.COLUMN_NAME_CONTACT
 
-            )
+        val sharedPreferences = requireActivity().getSharedPreferences("contacts", Context.MODE_PRIVATE)
+        val gson = Gson()
+        val json = sharedPreferences.getString("contactList", null)
+        val type = object : TypeToken<MutableList<ContactModel>>() {}.type
+        if (json != null) {
+            val savedContacts: MutableList<ContactModel> = gson.fromJson(json, type)
+            contactList.addAll(savedContacts)
+         }
 
-        val cursor: Cursor? = context?.contentResolver?.query(
-            ContactContract.CONTENT_URI,
-            projection,
-            null,
-            null,
-            null
-        )
-
-        cursor?.use {
-             val nameIndex = it.getColumnIndexOrThrow(ContactContract.ContactEntry.COLUMN_NAME_NAME)
-            val  typeIndex = it.getColumnIndexOrThrow(ContactContract.ContactEntry.COLUMN_NAME_TYPE)
-            val  contactIndex = it.getColumnIndexOrThrow(ContactContract.ContactEntry.COLUMN_NAME_CONTACT)
-
-
-            while (it.moveToNext()) {
-                val name = it.getString(nameIndex)
-                val type = it.getString(typeIndex)
-                val contact = it.getString(contactIndex)
-                contactList.add(ContactModel(name, type,contact))
-            }
             contactAdapter.notifyDataSetChanged()
         }
-    }
 
 }
