@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">contact_app_24</string>
+    <string name="add_email">Add Email</string>
+    <string name="contact_list">Contact List</string>
+    <string name="add_phone">Add Phone</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="contact_name">Contact Name</string>
+    <string name="enter_name">Enter name</string>
+    <string name="email_address">Email Address</string>
+    <string name="enter_address">Enter Address</string>
+    <string name="submit">Submit</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="contact_icon">contact icon</string>
+</resources>
